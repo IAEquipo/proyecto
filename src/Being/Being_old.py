@@ -38,6 +38,8 @@ class Beign:
     def getCostT(self):
         return self.costT
 
+
+
     def UP(self, map, flag):
         if self.costs[int(map) + 1] != 'X':
             if flag == 1:
