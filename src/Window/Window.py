@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import pygame, sys
+
 from pygame.locals import *
 from Map.Map import *
+from Being.Being import *
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -12,8 +14,9 @@ BLUE = (0, 177, 249)
 YELLOW = (255, 190, 65)
 GREEN = (146, 209, 101)
 DEFAULT = (243, 123, 173)
-COLOR_L = (244,110,120)
 
+COLOR_FINAL = (255, 0, 186)
+COLOR_L = (244,110,120)
 COLOR_BEIGN = (255, 0, 0)
 COLOR_LABEL = (255,0,255)
 
@@ -24,60 +27,75 @@ class Window(object):
     def __init__(self):
         global PIXEL
         pygame.init()
+        self.__map = Map()
+        self.__dim = self.__map.getDimensions()
+
+        self.__canvas = pygame.display.set_mode([self.__dim[0]*PIXEL,self.__dim[1]*PIXEL])
         self.__reloj = pygame.time.Clock()
-        self.map = Map()
-        dim = self.map.getDimensions()
-        self.canvas = pygame.display.set_mode([dim[0]*PIXEL,dim[1]*PIXEL])
         pygame.display.set_caption('Artificial Intelligence')
+
 
     def loop(self):
         while True:
+            if(pygame.mouse.get_pressed()[0] != 0):
+                self.ask_terrain()
+
             for evento in pygame.event.get():
                 if evento.type == QUIT:
                     pygame.quit()
                     sys.exit(0)
-            self.paint()
+
+            if(pygame.mouse.get_pressed()[2] != 0):
+                self.change_terrain()
+                self.paint()
+
+            for being in self.__beings:
+                being.move()
             pygame.display.flip()
+            self.paint()
             self.__reloj.tick(7)
 
     def paint(self):
         global PIXEL
         x=0
         y=0
-        for line in self.map.getMatrix():
+        for line in self.__map.getMatrix():
             for value in line:
-                if x == 3*PIXEL and y == 3*PIXEL:
-                    global COLOR_BEIGN
-                    pygame.draw.rect(self.canvas, COLOR_BEIGN, (x, y, PIXEL, PIXEL), 0)
                 if value == '0':
-                    global GRAY
-                    pygame.draw.rect(self.canvas, GRAY, (x, y, PIXEL, PIXEL), 0)
+                    global BLACK
+                    pygame.draw.rect(self.__canvas, BLACK, (x, y, PIXEL, PIXEL), 0)
                 elif value == '1':
                     global ORANGE_L
-                    pygame.draw.rect(self.canvas, ORANGE_L, (x, y, PIXEL, PIXEL), 0)
+                    pygame.draw.rect(self.__canvas, ORANGE_L, (x, y, PIXEL, PIXEL), 0)
                 elif value == '2':
                     global BLUE
-                    pygame.draw.rect(self.canvas, BLUE, (x, y, PIXEL, PIXEL), 0)
+                    pygame.draw.rect(self.__canvas, BLUE, (x, y, PIXEL, PIXEL), 0)
                 elif value == '3':
                     global YELLOW
-                    pygame.draw.rect(self.canvas, YELLOW, (x, y, PIXEL, PIXEL), 0)
+                    pygame.draw.rect(self.__canvas, YELLOW, (x, y, PIXEL, PIXEL), 0)
                 elif value == '4':
                     global GREEN
-                    pygame.draw.rect(self.canvas, GREEN, (x, y, PIXEL, PIXEL), 0)
+                    pygame.draw.rect(self.__canvas, GREEN, (x, y, PIXEL, PIXEL), 0)
                 elif value == -1:
-                    global BLACK
-                    pygame.draw.rect(self.canvas, BLACK, (x, y, PIXEL, PIXEL), 0)
+                    global GRAY
+                    pygame.draw.rect(self.__canvas, GRAY, (x, y, PIXEL, PIXEL), 0)
                 else:
                     global DEFAULT
-                    pygame.draw.rect(self.canvas, DEFAULT, (x, y, PIXEL, PIXEL), 0)
-                x += PIXEL
-            y += PIXEL
-            x = 0
+                    pygame.draw.rect(self.__canvas, DEFAULT, (x, y, PIXEL, PIXEL), 0)
+                y += PIXEL
+            x += PIXEL
+            y = 0
+        global COLOR_BEIGN, COLOR_FINAL
+        for being in self.__beings:
+            start1 = being.getPos()
+            pygame.draw.rect(self.__canvas, COLOR_BEIGN, (start1[0]*PIXEL, start1[1]*PIXEL, PIXEL, PIXEL), 0)
+            final1 = being.getFinal()
+            pygame.draw.rect(self.__canvas, COLOR_FINAL, (final1[0]*PIXEL, final1[1]*PIXEL, PIXEL, PIXEL), 0)
 
     def ask_terrain(self):
         global COLOR_L
         pos = pygame.mouse.get_pos()
-        num = self.world[pos[1]//PIXEL][pos[0]//PIXEL]
+        num = self.__map.getMatrix()[pos[0]//PIXEL][pos[1]//PIXEL]
         font = pygame.font.SysFont('comicsansms', 30)
 
         if num == '0':
@@ -91,12 +109,30 @@ class Window(object):
         elif num == '4':
             label = font.render("Forest", 1, COLOR_L)
 
-        self.canvas.blit(label, (pos[0], pos[1]))
-        pygame.display.flip()
+        self.__canvas.blit(label, (pos[0], pos[1]))
 
-    def displayInfo(self, string):
-        global COLOR_LABEL
-        pos = pygame.mouse.get_pos()
-        font = pygame.font.SysFont("monospace bold", 16)
-        label = font.render(str(string), 1, COLOR_LABEL )
-        self.canvas.blit(label, (pos[0]+5, pos[1]-10))
+    def change_terrain(self):
+        posMouse = pygame.mouse.get_pos()
+
+        while True:
+            print ("Moutain -> 0\nEarth -> 1\nWater -> 2\nSand -> 3\nForest -> 4\n")
+            newTerrain = str(input("Insert the value for change the terrain: "))
+
+            if newTerrain < "5" and newTerrain >= "0":
+                break
+        pos = list()
+        pos.append(posMouse[0]//PIXEL)
+        pos.append(posMouse[1]//PIXEL)
+        self.__map.setVal(pos, newTerrain)
+
+    def askStart(self, start, tipo):
+        return self.__map.validate(start, tipo)
+
+    def getDimensions(self):
+        return self.__dim
+
+    def setPlayers(self, players):
+        self.__beings = list()
+        for player in players:
+            aux = Being(player[0], player[1], player[2][0])
+            self.__beings.append(aux)
