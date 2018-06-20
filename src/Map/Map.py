@@ -42,11 +42,6 @@ class Map(object):
     def getLeft(self, pos):
         return self.__matrix[pos[0]-1][pos[1]]
 
-    def setVal(self, pos, val):
-        px = pos[0]
-        py = pos[1]
-        self.__matrix[px][py] = val
-
     def valTerrain(self, pos, tipo):
         vals = self.__beingInfo.get(tipo)
         terrain = int(self.__matrix[pos[0]][pos[1]])
