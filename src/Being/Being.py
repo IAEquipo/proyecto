@@ -12,24 +12,36 @@ class Being(object):
         self.__type = tipo
         self.__pos = start
         self.__final = final
-        view = BeingMap()
+        self.view = BeingMap()
         file = Archivo()
-        self.__being_values = file.read('beings.txt')
-        for line in being_info:
+        self.__beingInfo = {}
+        self.__being_values = file.read_being('beings.txt')
+        for line in self.__being_values:
             self.__beingInfo[line[0]] = line[1:]
         #personaje,montaña,tierra,agua,arena,bosque, pantano,nieve
+    @property
+    def getType(self):
+        return self.__type
 
     @property
     def getPos(self):
         return self.__pos
 
+    @property
+    def getPos(self):
+        return self.__pos
+
+    @property
+    def getBeingValues(self):
+        return self.__beingInfo
+
     def setPos(self,pos,beside):
         if(view.valTerrain(pos,self.__type)):
             self.__pos = pos
             view.setUp(self.__pos,beside[0])
-            view.setDown(self.__pos,beside[0])
-            view.setRight(self.__pos,beside[0])
-            view.setUp(self.__pos,beside[0])
+            view.setDown(self.__pos,beside[1])
+            view.setLeft(self.__pos,beside[2])
+            view.setRight(self.__pos,beside[3])
             self.costT = self.costT + self.terrainCost()
         else:
             return False
@@ -42,10 +54,10 @@ class Being(object):
         self.__pos = pos
 
     @property
-    def getcost(self):
+    def getCost(self):
         return self.costT
 
-    def setcost(self,pos):
+    def setCost(self,pos):
         self.costT = int(valor)
 
     def move(self):
@@ -63,9 +75,8 @@ class Being(object):
     def askLEFT(self, map, flag):
         return (view.valTerrain(self.__pos[0]-1, self.__type))
 
-    def terrainCost():
-        vals = self.__beingInfo.get(tipo)
+    def terrainCost(self):
+        vals = self.__beingInfo.get(self.getType)
         for i in range(len(vals)):
-            if valTerrain(self,self.__pos, self.__type):
-                if int(view.getTerrain(self.__pos)) == i :
-                    return int(vals[i])
+            if int(self.view.getTerrain(self.__pos)[0]) == i :
+                return int(vals[i])

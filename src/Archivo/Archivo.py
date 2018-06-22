@@ -27,7 +27,7 @@ class Archivo:
             contenido[i] = line.split(',')
             i = i + 1
         leer.close()
-        return contenido
+        return contenido[:-1]
 
     def write(self, ruta, contenido):
         escribir = open(ruta , 'w')
