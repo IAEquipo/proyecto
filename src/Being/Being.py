@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from anytree import Node, RenderTree
+from anytree.search import *
+from anytree.exporter import DotExporter
 
 from Map.BeingMap import *
 from Archivo.Archivo import *
+from Algoritmo.AStar import *
+
 
 class Being(object):
 
@@ -14,11 +19,14 @@ class Being(object):
         self.__final = final
         self.view = BeingMap()
         file = Archivo()
+        star = Astar()
         self.__beingInfo = {}
         self.__being_values = file.read_being('beings.txt')
         for line in self.__being_values:
             self.__beingInfo[line[0]] = line[1:]
-        #personaje,montaña,tierra,agua,arena,bosque, pantano,nieve
+        raiz = Node(str(self.__pos[0]) + "," + str(self.__pos[1]) + "->0," + str(self.star.DistanceToFinal(self.__pos,self.__final)))
+        self.__padre = raiz
+
     @property
     def getType(self):
         return self.__type
@@ -28,14 +36,10 @@ class Being(object):
         return self.__pos
 
     @property
-    def getPos(self):
-        return self.__pos
-
-    @property
     def getBeingValues(self):
         return self.__beingInfo
 
-    def setPos(self,pos,beside):
+    def setPos(self,pos,beside,Node):
         if(view.valTerrain(pos,self.__type)):
             self.__pos = pos
             view.setUp(self.__pos,beside[0])
@@ -43,6 +47,7 @@ class Being(object):
             view.setLeft(self.__pos,beside[2])
             view.setRight(self.__pos,beside[3])
             self.costT = self.costT + self.terrainCost()
+            self.__padre = Node
         else:
             return False
 
@@ -80,3 +85,11 @@ class Being(object):
         for i in range(len(vals)):
             if int(self.view.getTerrain(self.__pos)[0]) == i :
                 return int(vals[i])
+
+    def openNode(self,Parent,nodes):
+        self.star.openNode(nodes)
+        for i in Nodes:
+            Node(str(i[0]) + "," + str(i[1]) + "->" + str(self.CostT) + "," + str(self.star.DistanceToFinal(i,self.__final), parent=Parent)
+
+    def closeNode(self,Node):
+        self.star.closeNode(Node)
