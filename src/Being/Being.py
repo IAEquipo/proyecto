@@ -19,14 +19,18 @@ class Being(object):
         self.__final = final
         self.view = BeingMap()
         file = Archivo()
-        star = Astar()
+        star = AStar()
         self.__beingInfo = {}
         self.__being_values = file.read_being('beings.txt')
         for line in self.__being_values:
             self.__beingInfo[line[0]] = line[1:]
-        raiz = Node(str(self.__pos[0]) + "," + str(self.__pos[1]) + "->0," + str(self.star.DistanceToFinal(self.__pos,self.__final)))
+        raiz = Node(str(self.__pos[0]) + "," + str(self.__pos[1]) + "->0," + str(star.DistanceToFinal(self.__pos,self.__final)))
         self.__padre = raiz
 
+    @property
+    def getParent(self):
+        return self.__padre
+        
     @property
     def getType(self):
         return self.__type
@@ -89,7 +93,7 @@ class Being(object):
     def openNode(self,Parent,nodes):
         self.star.openNode(nodes)
         for i in Nodes:
-            Node(str(i[0]) + "," + str(i[1]) + "->" + str(self.CostT) + "," + str(self.star.DistanceToFinal(i,self.__final), parent=Parent)
+            Node(str(i[0]) + "," + str(i[1]) + "->" + str(self.CostT) + "," + str(self.star.DistanceToFinal(i,self.__final), parent=Parent))
 
     def closeNode(self,Node):
         self.star.closeNode(Node)
