@@ -28,15 +28,16 @@ class Window(object):
         global PIXEL
         pygame.init()
         self.__map = Map()
-        self.__dim = self.__map.getDimensions()
-
+        self.__dim = self.__map.getDimensions
         self.__canvas = pygame.display.set_mode([self.__dim[0]*PIXEL,self.__dim[1]*PIXEL])
+        self.__beings = list()
         self.__reloj = pygame.time.Clock()
         pygame.display.set_caption('Artificial Intelligence')
 
 
     def loop(self):
         while True:
+            print("Una vez más en el loop")
             if(pygame.mouse.get_pressed()[0] != 0):
                 self.ask_terrain()
 
@@ -49,11 +50,19 @@ class Window(object):
                 self.change_terrain()
                 self.paint()
 
-            for being in self.__beings:
-                being.move()
             pygame.display.flip()
             self.paint()
-            self.__reloj.tick(7)
+
+            for being in self.__beings:
+                print("i"+str(being.getPos()))
+                if not(being.finished()):
+                    being.move(self.__map.getBesideTerrain(being.getPos(), being.getType()))
+                else:
+                    pass
+
+            pygame.display.flip()
+            self.paint()
+            self.__reloj.tick(1)
 
     def paint(self):
         global PIXEL
@@ -87,10 +96,10 @@ class Window(object):
             y = 0
         global COLOR_BEIGN, COLOR_FINAL
         for being in self.__beings:
-            start1 = being.getPos()
-            pygame.draw.rect(self.__canvas, COLOR_BEIGN, (start1[0]*PIXEL, start1[1]*PIXEL, PIXEL, PIXEL), 0)
-            final1 = being.getFinal()
-            pygame.draw.rect(self.__canvas, COLOR_FINAL, (final1[0]*PIXEL, final1[1]*PIXEL, PIXEL, PIXEL), 0)
+            start = being.getPos()
+            pygame.draw.rect(self.__canvas, COLOR_BEIGN, (start[0]*PIXEL, start[1]*PIXEL, PIXEL, PIXEL), 0)
+            final = being.getFinal()
+            pygame.draw.rect(self.__canvas, COLOR_FINAL, (final[0]*PIXEL, final[1]*PIXEL, PIXEL, PIXEL), 0)
 
     def ask_terrain(self):
         global COLOR_L
@@ -125,14 +134,14 @@ class Window(object):
         pos.append(posMouse[1]//PIXEL)
         self.__map.setVal(pos, newTerrain)
 
-    def askStart(self, start, tipo):
-        return self.__map.validate(start, tipo)
+
+    def valTerrain(self, pos, tipo):
+        return self.__map.valTerrain(pos, tipo)
 
     def getDimensions(self):
         return self.__dim
 
     def setPlayers(self, players):
-        self.__beings = list()
         for player in players:
             aux = Being(player[0], player[1], player[2][0])
             self.__beings.append(aux)

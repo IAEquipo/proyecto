@@ -17,40 +17,73 @@ class Map(object):
         for line in being_info:
             self.beingInfo[line[0]] = line[1:]
         #self.__darkside = [[-1 for j in range(self.dimensions[0])] for i in range(self.dimensions[1])]
+        #print(self.beingInfo)
 
     @property
     def getDimensions(self):
         return self.dimensions
 
-    @property
     def getMatrix(self):
         return self.matrix
 
-    def getBeside(self):
+    def getBesideTerrain(self,pos,type):
         beside = []
-        beside.append(self.getUp)
-        beside.append(self.getDown)
-        beside.append(self.getLeft)
-        beside.append(self.getRight)
+        beside.append(self.getUpTerrain(pos,type))
+        beside.append(self.getDownTerrain(pos,type))
+        beside.append(self.getLeftTerrain(pos,type))
+        beside.append(self.getRightTerrain(pos,type))
         return beside
 
     @property
     def getDarkSide(self):
         return self.__darkside
 
-    def getUp(self, pos):
-        return self.matrix[pos[0]][pos[1]-1]
+    def getUpTerrain(self, pos, type):
+        pos_aux = list()
+        pos_aux.append(pos[0])
+        pos_aux.append(pos[1]-1)
+        print("posaux:"+str(pos_aux))
+        if(self.valTerrain(pos_aux,type)):
+            print("getUpTerrainMap->"+str(self.matrix[pos[0]][pos[1]-1]))
+            return self.matrix[pos[0]][pos[1]-1]
+        else:
+            return -2
 
-    def getDown(self, pos):
-        return self.matrix[pos[0]][pos[1]+1]
+    def getDownTerrain(self, pos, type):
+        pos_aux = list()
+        pos_aux.append(pos[0])
+        pos_aux.append(pos[1]+1)
+        print("posaux:"+str(pos_aux))
+        if(self.valTerrain(pos_aux,type)):
+            print("getDownTerrainMap->"+str(self.matrix[pos[0]][pos[1]-1]))
+            return self.matrix[pos[0]][pos[1]+1]
+        else:
+            return -2
 
-    def getRight(self, pos):
-        return self.matrix[pos[0]+1][pos[1]]
+    def getRightTerrain(self, pos, type):
+        pos_aux = list()
+        pos_aux.append(pos[0]+1)
+        pos_aux.append(pos[1])
+        print("posaux:"+str(pos_aux))
+        if(self.valTerrain(pos_aux,type)):
+            print("getRightTerrainMap->"+str(self.matrix[pos[0]][pos[1]-1]))
+            return self.matrix[pos[0]+1][pos[1]]
+        else:
+            return -2
 
-    def getLeft(self, pos):
-        return self.matrix[pos[0]-1][pos[1]]
+    def getLeftTerrain(self, pos, type):
+        pos_aux = list()
+        pos_aux.append(pos[0]-1)
+        pos_aux.append(pos[1])
+        print("posaux:"+str(pos_aux))
+        if(self.valTerrain(pos_aux,type)):
+            print("getLeftTerrainMap->"+str(self.matrix[pos[0]][pos[1]-1]))
+            return self.matrix[pos[0]-1][pos[1]]
+        else:
+            return -2
 
     def valTerrain(self, pos, tipo):
         vals = self.beingInfo.get(tipo)
-        terrain = int(self.matrix[pos[0]][pos[1]])
-        return (vals[terrain] != 'X')
+        if((int(pos[0])<int(self.dimensions[0])) and (int(pos[1])<int(self.dimensions[1])) and (int(pos[0]))>=0 and (int(pos[1]))>=0):
+            terrain = int(self.matrix[pos[0]][pos[1]])
+            return (vals[terrain] != 'X')

@@ -17,25 +17,24 @@ class Being(object):
         self.__type = tipo
         self.__pos = start
         self.__final = final
-        self.view = BeingMap()
+        self.view = BeingMap(self.__pos)
         file = Archivo()
-        star = AStar()
+        self.star = AStar()
         self.__beingInfo = {}
         self.__being_values = file.read_being('beings.txt')
         for line in self.__being_values:
             self.__beingInfo[line[0]] = line[1:]
-        raiz = Node(str(self.__pos[0]) + "," + str(self.__pos[1]) + "->0," + str(star.DistanceToFinal(self.__pos,self.__final)))
-        self.__padre = raiz
+        self.raiz = Node(str(self.__pos[0]) + "," + str(self.__pos[1]) + "->0," + str(self.star.distanceToFinal(self.__pos,self.__final)))
+        self.__padre = self.raiz
+        self.star.setOpenNode(self.__pos)
 
     @property
     def getParent(self):
         return self.__padre
-        
-    @property
+
     def getType(self):
         return self.__type
 
-    @property
     def getPos(self):
         return self.__pos
 
@@ -43,34 +42,24 @@ class Being(object):
     def getBeingValues(self):
         return self.__beingInfo
 
-    def setPos(self,pos,beside,Node):
-        if(view.valTerrain(pos,self.__type)):
+
+    def setPos(self,pos,beside):
+        if(self.view.valTerrain(pos,self.__type)):
             self.__pos = pos
-            view.setUp(self.__pos,beside[0])
-            view.setDown(self.__pos,beside[1])
-            view.setLeft(self.__pos,beside[2])
-            view.setRight(self.__pos,beside[3])
-            self.costT = self.costT + self.terrainCost()
-            self.__padre = Node
         else:
             return False
 
-    @property
     def getFinal(self):
         return self.__final
 
     def setFinal(self,pos):
         self.__pos = pos
 
-    @property
     def getCost(self):
         return self.costT
 
     def setCost(self,pos):
         self.costT = int(valor)
-
-    def move(self):
-        pass
 
     def askUP(self):
         return (view.valTerrain(self.__pos[1]-1, self.__type))
@@ -84,16 +73,43 @@ class Being(object):
     def askLEFT(self, map, flag):
         return (view.valTerrain(self.__pos[0]-1, self.__type))
 
-    def terrainCost(self):
-        vals = self.__beingInfo.get(self.getType)
+    def terrainCost(self, pos):
+        print("TerrainCostPos->"+str(pos))
+        vals = self.__beingInfo.get(self.getType())
+        print("valsXVaños->"+str(vals))
         for i in range(len(vals)):
-            if int(self.view.getTerrain(self.__pos)[0]) == i :
+            if int(self.view.getTerrain(pos)) == i:
                 return int(vals[i])
 
-    def openNode(self,Parent,nodes):
+    def openNode(self,nodes):
         self.star.openNode(nodes)
-        for i in Nodes:
-            Node(str(i[0]) + "," + str(i[1]) + "->" + str(self.CostT) + "," + str(self.star.DistanceToFinal(i,self.__final), parent=Parent))
+        for i in nodes:
+            if (i != []):
+                Node(str(i[0]) + "," + str(i[1]) + "->" + str(self.getCost) + "," + str(self.star.distanceToFinal(i,self.__final)), parent=self.__padre)
 
-    def closeNode(self,Node):
-        self.star.closeNode(Node)
+    def closeNode(self,node):
+        self.star.closeNode(node)
+
+    def move(self,beside): #window nos  manda beside
+        self.view.setNow(self.__pos)
+        self.view.setBesideTerrain(self.view.getBesidePos(self.__pos,self.__type),beside)
+        self.openNode(self.view.getBesidePos(self.__pos,self.__type))
+        print("->>"+str(self.view.getBesidePos(self.__pos,self.__type)))
+        self.closeNode(self.__pos)
+        best = self.star.bestNode(self.__final)
+        print("El mejor nodo: {}".format(best))
+        print("nose que poner aqui->"+str(self.view.getBesideTerrain(self.__pos)))
+        print ("TerrainCost: {}".format(self.terrainCost(best)))
+        self.setPos(best,beside)
+        self.costT = self.costT + int(self.terrainCost(best))
+        assignNode = (str(best[0]) + "," +str(best[1]) + "->" + str(self.costT) + ',' + str(self.star.distanceToFinal(best,self.__final)))
+        print(assignNode)
+        self.__padre = Node(assignNode, parent = self.__padre)
+        self.view.deleteNow(self.__pos)
+        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+
+    def finished(self):
+        if (self.__pos == self.__final):
+            return True
+        else:
+            return False

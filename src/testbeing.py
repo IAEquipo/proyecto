@@ -9,6 +9,6 @@ being = Being('Human', [3,4], [6,7])
 
 star = AStar()
 
-print(star.DistanceToFinal([3,4], [6,7]))
+#print(star.DistanceToFinal([3,4], [6,7]))
 
-print(being.getParent)
+#print(being.getParent)
