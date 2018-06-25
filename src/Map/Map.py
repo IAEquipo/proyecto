@@ -11,7 +11,7 @@ class Map(object):
         self.matrix = file.read('lab2.txt')
         self.dimensions.append(len(self.matrix))
         self.dimensions.append(len(self.matrix[0]))
-        self.beingInfo = {}
+        self.beingInfo = dict()
         file = Archivo()
         being_info = file.read_being('beings.txt')
         for line in being_info:
@@ -39,51 +39,51 @@ class Map(object):
         return self.__darkside
 
     def getUpTerrain(self, pos, type):
-        pos_aux = list()
-        pos_aux.append(pos[0])
-        pos_aux.append(pos[1]-1)
-        print("posaux:"+str(pos_aux))
-        if(self.valTerrain(pos_aux,type)):
-            print("getUpTerrainMap->"+str(self.matrix[pos[0]][pos[1]-1]))
-            return self.matrix[pos[0]][pos[1]-1]
+        posUP = list()
+        posUP.append(pos[0])
+        posUP.append(pos[1]-1)
+        print("posUp->>>"+str(posUP)+","+str(self.valTerrain(posUP,type)))
+        if(self.valTerrain(posUP,type)):
+            print("getUpTerrainMap->"+str(self.matrix[posUP[0]][posUP[1]]))
+            return self.matrix[posUP[0]][posUP[1]]
         else:
             return -2
 
     def getDownTerrain(self, pos, type):
-        pos_aux = list()
-        pos_aux.append(pos[0])
-        pos_aux.append(pos[1]+1)
-        print("posaux:"+str(pos_aux))
-        if(self.valTerrain(pos_aux,type)):
-            print("getDownTerrainMap->"+str(self.matrix[pos[0]][pos[1]-1]))
-            return self.matrix[pos[0]][pos[1]+1]
+        posDOWN = list()
+        posDOWN.append(pos[0])
+        posDOWN.append(pos[1]+1)
+        print("posauxDown->>>"+str(posDOWN)+","+str(self.valTerrain(posDOWN,type)))
+        if(self.valTerrain(posDOWN,type)):
+            print("getDownTerrainMap->"+str(self.matrix[posDOWN[0]][posDOWN[1]]))
+            return self.matrix[posDOWN[0]][posDOWN[1]]
         else:
             return -2
 
     def getRightTerrain(self, pos, type):
-        pos_aux = list()
-        pos_aux.append(pos[0]+1)
-        pos_aux.append(pos[1])
-        print("posaux:"+str(pos_aux))
-        if(self.valTerrain(pos_aux,type)):
-            print("getRightTerrainMap->"+str(self.matrix[pos[0]][pos[1]-1]))
-            return self.matrix[pos[0]+1][pos[1]]
+        posRIGHT = list()
+        posRIGHT.append(pos[0]+1)
+        posRIGHT.append(pos[1])
+        print("posauxRight->>>"+str(posRIGHT)+","+str(self.valTerrain(posRIGHT,type)))
+        if(self.valTerrain(posRIGHT,type)):
+            print("getRightTerrainMap->"+str(self.matrix[posRIGHT[0]][posRIGHT[1]]))
+            return self.matrix[posRIGHT[0]][posRIGHT[1]]
         else:
             return -2
 
     def getLeftTerrain(self, pos, type):
-        pos_aux = list()
-        pos_aux.append(pos[0]-1)
-        pos_aux.append(pos[1])
-        print("posaux:"+str(pos_aux))
-        if(self.valTerrain(pos_aux,type)):
-            print("getLeftTerrainMap->"+str(self.matrix[pos[0]][pos[1]-1]))
-            return self.matrix[pos[0]-1][pos[1]]
+        posLEFT = list()
+        posLEFT.append(pos[0]-1)
+        posLEFT.append(pos[1])
+        print("posauxLeft->>>"+str(posLEFT)+","+str(self.valTerrain(posLEFT,type)))
+        if(self.valTerrain(posLEFT,type)):
+            print("getLeftTerrainMap->"+str(self.matrix[posLEFT[0]][posLEFT[1]]))
+            return self.matrix[posLEFT[0]][posLEFT[1]]
         else:
             return -2
 
-    def valTerrain(self, pos, tipo):
-        vals = self.beingInfo.get(tipo)
+    def valTerrain(self, pos, type):
+        vals = self.beingInfo.get(type)
         if((int(pos[0])<int(self.dimensions[0])) and (int(pos[1])<int(self.dimensions[1])) and (int(pos[0]))>=0 and (int(pos[1]))>=0):
             terrain = int(self.matrix[pos[0]][pos[1]])
             return (vals[terrain] != 'X')

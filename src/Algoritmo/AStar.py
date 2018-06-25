@@ -16,6 +16,7 @@ class AStar(object):
 
     def openNode(self,Nodes):
         for i in Nodes:
+
             if (i != []):
                 self.__openNode.append(i)
 
@@ -40,27 +41,3 @@ class AStar(object):
                 distance_aux = self.distanceToFinal(nodo,posFinal)
                 node_aux = nodo
         return node_aux
-
-
-
-"""
-    def bestNode(self):
-        nodoF = self.__openNode[0]
-        min = int(str(nodoF).split("/")[-1].split(",")[-1].split("'")[0])
-        for nodo in self.__openNode:
-            actual = int(str(nodo).split("/")[-1].split(",")[-1].split("'")[0])
-            if(actual == min):
-                XA = int(str(nodo).split("->")[-1].split(",")[0])
-                YA = int(str(nodo).split("->")[-1].split(",")[1].split("'")[0])
-                dA = YA - XA
-                XF = int(str(nodoF).split("->")[-1].split(",")[0])
-                YF = int(str(nodoF).split("->")[-1].split(",")[1].split("'")[0])
-                dF = YF - XF
-                if(dA == dF):
-                    pass
-                elif(dA < dF):
-                    nodoF = nodo
-            elif(actual < min):
-                nodoF = nodo
-                min = actual
-        return nodoF"""

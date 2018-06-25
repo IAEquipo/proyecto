@@ -25,8 +25,8 @@ def main():
     for t in tipo:
         posStart = randomPoint(win, t)
         posFinal = randomPoint(win, t)
-        #posStart = [0,0]
-        #posFinal = [4,3]
+        posStart = [0,4]
+        posFinal = [11,8]
         players.append([t, posStart, [posFinal]])
         print("Player: {}".format(players))
         print("Tipo: {}\tInicio: {}\tFinal: {}".format(t, posStart, posFinal))

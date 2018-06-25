@@ -82,7 +82,15 @@ class Being(object):
                 return int(vals[i])
 
     def openNode(self,nodes):
-        self.star.openNode(nodes)
+        nodes_aux = list()
+        for i in nodes:
+            print(i)
+            print(self.view.getTerrain(i))
+            if(self.view.getTerrain(i) != -2):
+                nodes_aux.append(i)
+
+
+        self.star.openNode(nodes_aux)
         for i in nodes:
             if (i != []):
                 Node(str(i[0]) + "," + str(i[1]) + "->" + str(self.getCost) + "," + str(self.star.distanceToFinal(i,self.__final)), parent=self.__padre)

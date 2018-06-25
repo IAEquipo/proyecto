@@ -54,7 +54,6 @@ class Window(object):
             self.paint()
 
             for being in self.__beings:
-                print("i"+str(being.getPos()))
                 if not(being.finished()):
                     being.move(self.__map.getBesideTerrain(being.getPos(), being.getType()))
                 else:
