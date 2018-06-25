@@ -27,11 +27,14 @@ class Map(object):
         return self.matrix
 
     def getBesideTerrain(self,pos,type):
+        print("entré a getBesideTerrain")
         beside = []
         beside.append(self.getUpTerrain(pos,type))
         beside.append(self.getDownTerrain(pos,type))
         beside.append(self.getLeftTerrain(pos,type))
         beside.append(self.getRightTerrain(pos,type))
+        print("Estoy en la posicion {} y los valores de mis lados".format(pos))
+        print("Estoy desde getBesideTerrain: {}".format(beside))
         return beside
 
     @property

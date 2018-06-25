@@ -44,7 +44,7 @@ class Being(object):
 
 
     def setPos(self,pos,beside):
-        if(self.view.valTerrain(pos,self.__type)):
+        if(self.view.valMove(pos,self.__type)):
             self.__pos = pos
         else:
             return False
@@ -62,16 +62,16 @@ class Being(object):
         self.costT = int(valor)
 
     def askUP(self):
-        return (view.valTerrain(self.__pos[1]-1, self.__type))
+        return (view.valMove(self.__pos[1]-1, self.__type))
 
     def askDOWN(self, map, flag):
-        return (view.valTerrain(self.__pos[1]+1, self.__type))
+        return (view.valMove(self.__pos[1]+1, self.__type))
 
     def askRIGHT(self, map, flag):
-        return (view.valTerrain(self.__pos[0]+1, self.__type))
+        return (view.valMove(self.__pos[0]+1, self.__type))
 
     def askLEFT(self, map, flag):
-        return (view.valTerrain(self.__pos[0]-1, self.__type))
+        return (view.valMove(self.__pos[0]-1, self.__type))
 
     def terrainCost(self, pos):
         print("TerrainCostPos->"+str(pos))
