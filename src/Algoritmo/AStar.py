@@ -81,9 +81,9 @@ class AStar(object):
         menores = []
         menores.append(auxNode)
         Total = ((self.distanceToFinal(auxNode[:2],posFinal)) + (auxNode[2]))
-        print("-------------->"+str(Total)+"Nodo->"+str(auxNode)+" / Distancia"+str(self.distanceToFinal(auxNode,posFinal))+"soy el primero prro")
+        print("-------------->"+str(Total)+" /Nodo->"+str(auxNode)+" / Distancia"+str(self.distanceToFinal(auxNode,posFinal))+"soy el primero prro")
         for nodo in self.__openNode[1:]:
-            print("-------------->"+str(int(self.distanceToFinal(nodo[:2],posFinal)) + (nodo[2]))+"Nodo->"+str(nodo)+" / Distancia"+str(self.distanceToFinal(nodo,posFinal)))
+            print("-------------->"+str(int(self.distanceToFinal(nodo[:2],posFinal))+(nodo[2]))+"Nodo->"+str(nodo)+" / Distancia"+str(self.distanceToFinal(nodo,posFinal)))
             if(Total>(int(self.distanceToFinal(nodo[:2],posFinal)) + (nodo[2]))):#Se cambio <
 
                 #distance_aux = self.distanceToFinal(nodo,posFinal)
@@ -93,27 +93,26 @@ class AStar(object):
                 menores = []
                 menores.append(auxNode)
             elif (Total == (int(self.distanceToFinal(nodo[:2],posFinal)) + (nodo[2]))):
-                print("Encontre nodos iguales")
                 menores.append(nodo)
                 #print("ward")
         #print("Best-->"+str(Total)+"Nodo->"+str(auxNode)+" / Distancia"+str(self.distanceToFinal(auxNode,posFinal)))
-        print(menores)
-
-
-        print(aux_menor)
 
         print("en esta iteracion tengo ->>"+str(menores))
-        return auxNode
+        return self.minDistance(menores)
 
     def minDistance(self, nodes):
-         aux_menor = self.distanceToFinal(nodes[0][:2],self.__posFinal)
-         for nodo in nodes[1:]:
-             if(aux_menor > self.distanceToFinal(nodes[0][:2],self.__posFinal)):
-                 aux_menor = self.distanceToFinal(nodes[0][:2],self.__posFinal)
-                 
+        print("-------------entre a Min Distance----------")
+        print("-------------->Distancia :"+str(self.distanceToFinal(nodes[0],self.__posFinal))+"  /soy el primero prro")
+        aux_menor = self.distanceToFinal(nodes[0][:2],self.__posFinal)
+        auxNode = nodes[0]
+        for nodo in nodes[1:]:
+            #print("-------------->Distancia :"+str(self.distanceToFinal(nodo,self.__posFinal)))
+            if(aux_menor > self.distanceToFinal(nodo[:2],self.__posFinal)):
+                aux_menor = self.distanceToFinal(nodo[:2],self.__posFinal)
+                auxNode = nodo
 
-
-
+        print("el mas chidoliro minDistance es:"+str(auxNode)+" / Con ->"+str(aux_menor))
+        return auxNode
 
     def bestValNode(self,NodeA,NodeB):
         if(((self.distanceToFinal(NodeA[:2],self.__posFinal)) + (NodeA[2])) > ((self.distanceToFinal(NodeB[:2],self.__posFinal)) + (NodeB[2]))):
