@@ -140,5 +140,5 @@ class Window(object):
 
     def setPlayers(self, players):
         for player in players:
-            aux = Being(player[0], player[1], player[2][0])
+            aux = Being(player[0], player[1], player[2])
             self.__beings.append(aux)

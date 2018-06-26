@@ -140,6 +140,6 @@ class Being(object):
 
     def finished(self):
         if (self.__pos == self.__final):
-            return True
+            return self.costT
         else:
             return False
