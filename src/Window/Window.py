@@ -36,6 +36,8 @@ class Window(object):
 
 
     def loop(self):
+        pygame.display.flip()
+        self.paint()
         while True:
             print("Una vez más en el loop")
             if(pygame.mouse.get_pressed()[0] != 0):
@@ -50,9 +52,6 @@ class Window(object):
                 self.change_terrain()
                 self.paint()
 
-            pygame.display.flip()
-            self.paint()
-
             for being in self.__beings:
                 if not(being.finished()):
                     being.move(self.__map.getBesideTerrain(being.getPos(), being.getType()))
@@ -61,7 +60,7 @@ class Window(object):
 
             pygame.display.flip()
             self.paint()
-            self.__reloj.tick(1)
+            self.__reloj.tick(2)
 
     def paint(self):
         global PIXEL

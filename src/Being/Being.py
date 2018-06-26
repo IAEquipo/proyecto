@@ -24,9 +24,10 @@ class Being(object):
         self.__being_values = file.read_being('beings.txt')
         for line in self.__being_values:
             self.__beingInfo[line[0]] = line[1:]
-        self.raiz = Node(str(self.__pos[0]) + "," + str(self.__pos[1]) + "->0," + str(self.star.distanceToFinal(self.__pos,self.__final)))
+        self.raiz = Node(str(self.__pos[0]) + "," + str(self.__pos[1]))
         self.__padre = self.raiz
-        self.star.setOpenNode(self.__pos)
+        self.star.setOpenNode(self.getNodeFormat(self.__pos,0))
+        self.star.setPosFinal(self.__final)
 
     @property
     def getParent(self):
@@ -42,9 +43,20 @@ class Being(object):
     def getBeingValues(self):
         return self.__beingInfo
 
+    def getNodeFormat(self,pos,cost):
+        auxF = list()
+        auxF.append(pos[0])
+        auxF.append(pos[1])
+        auxF.append(cost)
+        #print("Format->>"+str(auxF))
+        return auxF
 
     def setPos(self,pos,beside):
+
+        #self.view.setVisited(self.__pos)
+        print("setPos-> pos"+str(pos)+" / beside"+str(beside)+"/ me puedo mover"+str(self.view.valMove(pos,self.__type)))
         if(self.view.valMove(pos,self.__type)):
+            self.view.setVisited(self.__pos)
             self.__pos = pos
         else:
             return False
@@ -74,47 +86,59 @@ class Being(object):
         return (view.valMove(self.__pos[0]-1, self.__type))
 
     def terrainCost(self, pos):
-        print("TerrainCostPos->"+str(pos))
         vals = self.__beingInfo.get(self.getType())
-        print("valsXVaños->"+str(vals))
         for i in range(len(vals)):
             if int(self.view.getTerrain(pos)) == i:
                 return int(vals[i])
+        return 0
 
-    def openNode(self,nodes):
-        nodes_aux = list()
-        for i in nodes:
-            print(i)
-            print(self.view.getTerrain(i))
-            if(self.view.getTerrain(i) != -2):
-                nodes_aux.append(i)
+    def openNode(self,nodes,cost):
+        auxNode =list()
+        nodes_aux = nodes[:]
+        for i in range(len(nodes)):
+            #print(self.view.getTerrain(nodes[i]))
+            if(self.view.getTerrain(nodes[i]) != -2):
+                nodes[i].append(cost[i])
 
-
-        self.star.openNode(nodes_aux)
-        for i in nodes:
+        self.star.openNode(nodes)
+        for i in nodes_aux:
             if (i != []):
-                Node(str(i[0]) + "," + str(i[1]) + "->" + str(self.getCost) + "," + str(self.star.distanceToFinal(i,self.__final)), parent=self.__padre)
+                Node(str(i[0]) + "," + str(i[1]), parent=self.__padre)
 
     def closeNode(self,node):
         self.star.closeNode(node)
 
+    def getCostBeside(self,pos):
+        BesideCost = list()
+        BesideCost.append(self.costT+(int(self.terrainCost(pos[0]))))
+        BesideCost.append(self.costT+(int(self.terrainCost(pos[1]))))
+        BesideCost.append(self.costT+(int(self.terrainCost(pos[2]))))
+        BesideCost.append(self.costT+(int(self.terrainCost(pos[3]))))
+        print("CostosBeside->"+str(BesideCost))
+        return BesideCost
+
     def move(self,beside): #window nos  manda beside
+        nodeToClose = list()
+        print("||||||||||||||||||<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>g>>>>>>>>>>>>>> <<<<|||||||||||||||")
         self.view.setNow(self.__pos)
         self.view.setBesideTerrain(self.view.getBesidePos(self.__pos,self.__type),beside)
-        self.openNode(self.view.getBesidePos(self.__pos,self.__type))
-        print("->>"+str(self.view.getBesidePos(self.__pos,self.__type)))
-        self.closeNode(self.__pos)
+        self.openNode(self.view.getBesidePos(self.__pos,self.__type), self.getCostBeside(self.view.getBesidePos(self.__pos,self.__type)))
+        self.closeNode(self.getNodeFormat(self.__pos,self.costT))
+        #print("El mejor nodo: {}".format(best))
         best = self.star.bestNode(self.__final)
-        print("El mejor nodo: {}".format(best))
-        print("nose que poner aqui->"+str(self.view.getBesideTerrain(self.__pos)))
-        print ("TerrainCost: {}".format(self.terrainCost(best)))
-        self.setPos(best,beside)
-        self.costT = self.costT + int(self.terrainCost(best))
-        assignNode = (str(best[0]) + "," +str(best[1]) + "->" + str(self.costT) + ',' + str(self.star.distanceToFinal(best,self.__final)))
+        print("Move recibi Best->"+str(best))
+        #print("nose que poner aqui->"+str(self.view.getBesideTerrain(self.__pos)))
+        #print ("TerrainCost: {}".format(self.terrainCost(best)))
+        self.setPos(best[:2],beside)
+        #self.costT = self.costT + int(self.terrainCost(best[2]))
+        print("before--Mi Costo->"+str(self.costT))
+        self.costT = best[2]
+        print("after--Mi Costo->"+str(self.costT))
+        assignNode = (str(best[0]) + "," +str(best[1]))
         print(assignNode)
         self.__padre = Node(assignNode, parent = self.__padre)
         self.view.deleteNow(self.__pos)
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+        print("|||||||||||||<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> <<<<<<<<<<<<<<<<<<<<<<||||||||||||||||||||")
 
     def finished(self):
         if (self.__pos == self.__final):

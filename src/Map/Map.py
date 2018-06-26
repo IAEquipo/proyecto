@@ -17,7 +17,6 @@ class Map(object):
         for line in being_info:
             self.beingInfo[line[0]] = line[1:]
         #self.__darkside = [[-1 for j in range(self.dimensions[0])] for i in range(self.dimensions[1])]
-        #print(self.beingInfo)
 
     @property
     def getDimensions(self):
@@ -29,10 +28,10 @@ class Map(object):
     def getBesideTerrain(self,pos,type):
         print("entré a getBesideTerrain")
         beside = []
-        beside.append(self.getUpTerrain(pos,type))
-        beside.append(self.getDownTerrain(pos,type))
-        beside.append(self.getLeftTerrain(pos,type))
-        beside.append(self.getRightTerrain(pos,type))
+        beside.append(self.getUpTerrain(pos))
+        beside.append(self.getDownTerrain(pos))
+        beside.append(self.getLeftTerrain(pos))
+        beside.append(self.getRightTerrain(pos))
         print("Estoy en la posicion {} y los valores de mis lados".format(pos))
         print("Estoy desde getBesideTerrain: {}".format(beside))
         return beside
@@ -41,52 +40,55 @@ class Map(object):
     def getDarkSide(self):
         return self.__darkside
 
-    def getUpTerrain(self, pos, type):
+    def getUpTerrain(self, pos):
+        print(pos)
         posUP = list()
         posUP.append(pos[0])
         posUP.append(pos[1]-1)
-        print("posUp->>>"+str(posUP)+","+str(self.valTerrain(posUP,type)))
-        if(self.valTerrain(posUP,type)):
-            print("getUpTerrainMap->"+str(self.matrix[posUP[0]][posUP[1]]))
+        print("UP: {}".format(posUP))
+        if(self.valDimensions(posUP)):
             return self.matrix[posUP[0]][posUP[1]]
         else:
             return -2
 
-    def getDownTerrain(self, pos, type):
+    def getDownTerrain(self, pos):
+        print(pos)
         posDOWN = list()
         posDOWN.append(pos[0])
         posDOWN.append(pos[1]+1)
-        print("posauxDown->>>"+str(posDOWN)+","+str(self.valTerrain(posDOWN,type)))
-        if(self.valTerrain(posDOWN,type)):
-            print("getDownTerrainMap->"+str(self.matrix[posDOWN[0]][posDOWN[1]]))
+        print("DOWN: {}".format(posDOWN))
+        if(self.valDimensions(posDOWN)):
             return self.matrix[posDOWN[0]][posDOWN[1]]
         else:
             return -2
 
-    def getRightTerrain(self, pos, type):
+    def getRightTerrain(self, pos):
+        print(pos)
         posRIGHT = list()
         posRIGHT.append(pos[0]+1)
         posRIGHT.append(pos[1])
-        print("posauxRight->>>"+str(posRIGHT)+","+str(self.valTerrain(posRIGHT,type)))
-        if(self.valTerrain(posRIGHT,type)):
-            print("getRightTerrainMap->"+str(self.matrix[posRIGHT[0]][posRIGHT[1]]))
+        print("RIGHT: {}".format(posRIGHT))
+        if(self.valDimensions(posRIGHT)):
             return self.matrix[posRIGHT[0]][posRIGHT[1]]
         else:
             return -2
 
-    def getLeftTerrain(self, pos, type):
+    def getLeftTerrain(self, pos):
+        print(pos)
         posLEFT = list()
         posLEFT.append(pos[0]-1)
         posLEFT.append(pos[1])
-        print("posauxLeft->>>"+str(posLEFT)+","+str(self.valTerrain(posLEFT,type)))
-        if(self.valTerrain(posLEFT,type)):
-            print("getLeftTerrainMap->"+str(self.matrix[posLEFT[0]][posLEFT[1]]))
+        print("LEFT: {}".format(posLEFT))
+        if(self.valDimensions(posLEFT)):
             return self.matrix[posLEFT[0]][posLEFT[1]]
         else:
             return -2
 
+    def valDimensions(self, pos):
+        return ((int(pos[0])<int(self.dimensions[0])) and (int(pos[1])<int(self.dimensions[1])) and (int(pos[0]))>=0 and (int(pos[1]))>=0)
+
     def valTerrain(self, pos, type):
         vals = self.beingInfo.get(type)
-        if((int(pos[0])<int(self.dimensions[0])) and (int(pos[1])<int(self.dimensions[1])) and (int(pos[0]))>=0 and (int(pos[1]))>=0):
-            terrain = int(self.matrix[pos[0]][pos[1]])
-            return (vals[terrain] != 'X')
+        terrain = int(self.matrix[pos[0]][pos[1]])
+        print("valido que el terreno de los lados en map, se pueda accesar para {} y esto es {} para la {}: ".format(type, vals[terrain] != 'X',pos))
+        return (vals[terrain] != 'X')
