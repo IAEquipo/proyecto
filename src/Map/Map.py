@@ -26,7 +26,6 @@ class Map(object):
         return self.matrix
 
     def getBesideTerrain(self,pos,type):
-        print("entré a getBesideTerrain")
         beside = []
         beside.append(self.getUpTerrain(pos))
         beside.append(self.getDownTerrain(pos))
@@ -40,45 +39,37 @@ class Map(object):
     def getDarkSide(self):
         return self.__darkside
 
-    def getUpTerrain(self, pos):
-        print(pos)
+    def getUpTerrain(self, pos):#Cuando es -2 se sale de la Dimensiones para lo demas regresa el terreno
         posUP = list()
         posUP.append(pos[0])
         posUP.append(pos[1]-1)
-        print("UP: {}".format(posUP))
         if(self.valDimensions(posUP)):
             return self.matrix[posUP[0]][posUP[1]]
         else:
             return -2
 
     def getDownTerrain(self, pos):
-        print(pos)
         posDOWN = list()
         posDOWN.append(pos[0])
         posDOWN.append(pos[1]+1)
-        print("DOWN: {}".format(posDOWN))
         if(self.valDimensions(posDOWN)):
             return self.matrix[posDOWN[0]][posDOWN[1]]
         else:
             return -2
 
     def getRightTerrain(self, pos):
-        print(pos)
         posRIGHT = list()
         posRIGHT.append(pos[0]+1)
         posRIGHT.append(pos[1])
-        print("RIGHT: {}".format(posRIGHT))
         if(self.valDimensions(posRIGHT)):
             return self.matrix[posRIGHT[0]][posRIGHT[1]]
         else:
             return -2
 
     def getLeftTerrain(self, pos):
-        print(pos)
         posLEFT = list()
         posLEFT.append(pos[0]-1)
         posLEFT.append(pos[1])
-        print("LEFT: {}".format(posLEFT))
         if(self.valDimensions(posLEFT)):
             return self.matrix[posLEFT[0]][posLEFT[1]]
         else:
@@ -90,5 +81,4 @@ class Map(object):
     def valTerrain(self, pos, type):
         vals = self.beingInfo.get(type)
         terrain = int(self.matrix[pos[0]][pos[1]])
-        print("valido que el terreno de los lados en map, se pueda accesar para {} y esto es {} para la {}: ".format(type, vals[terrain] != 'X',pos))
         return (vals[terrain] != 'X')

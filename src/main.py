@@ -8,7 +8,6 @@ def randomPoint(win, tipo):
     dim = win.getDimensions()
     while True:
         start = list()
-
         start.append(random.randrange(dim[0]))
         start.append(random.randrange(dim[1]))
         #print (start)
@@ -23,12 +22,12 @@ def main():
     tipo = ["Human"]
     players = list()
     for t in tipo:
-        posStart = randomPoint(win, t)
-        posFinal = randomPoint(win, t)
-        #posStart = [8,9]
-        #posFinal = [10,9]
+        #posStart = randomPoint(win, t)
+        #posFinal = randomPoint(win, t)
+        posStart = [8,9]
+        posFinal = [10,9]
         players.append([t, posStart, [posFinal]])
-        print("Player: {}".format(players))
+        #print("Player: {}".format(players))
         print("Tipo: {}\tInicio: {}\tFinal: {}".format(t, posStart, posFinal))
     win.setPlayers(players)
 

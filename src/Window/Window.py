@@ -39,7 +39,6 @@ class Window(object):
         pygame.display.flip()
         self.paint()
         while True:
-            print("Una vez más en el loop")
             if(pygame.mouse.get_pressed()[0] != 0):
                 self.ask_terrain()
 

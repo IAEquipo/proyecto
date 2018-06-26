@@ -16,9 +16,10 @@ class BeingMap(Map):
         return self.matrix
 
     def setTerrain(self, pos, terrain):
-        if (int(terrain) >= 0 and pos != []):
+        #print("setTerrain")
+        #print(pos)
+        if terrain != -2:
             self.matrix[pos[0]][pos[1]][0] = terrain
-        else: -2
 
     def getUpTerrain(self, pos):
         return self.matrix[pos[0]][pos[1]-1][0]
@@ -32,63 +33,58 @@ class BeingMap(Map):
     def getLeftTerrain(self, pos):
         return self.matrix[pos[0]-1][pos[1]][0]
 
-    def getUpPos(self,pos,typ):
+    def getUpPos(self,pos):
         position = [pos[0], pos[1]-1]
         #print("Position: {}".format(position))
-        #print("valMove: {}".format(self.valMove(position,typ)))
-        #if(self.valMove(position,typ)):
         return position
-        #else:
-            #return []
 
-    def getDownPos(self,pos,typ):
+    def getDownPos(self,pos):
         position = [pos[0], pos[1]+1]
-        #if(self.valMove(position,typ)):
         return position
-        #else:
-            #return []
 
-    def getLeftPos(self,pos,typ):
+    def getLeftPos(self,pos):
         position = [pos[0]-1, pos[1]]
-        #if(self.valMove(position,typ)):
         return position
-        #else:
-            #return []
 
-    def getRightPos(self,pos, typ):
+    def getRightPos(self,pos):
         position = [pos[0]+1, pos[1]]
-        #if(self.valMove(position,typ)):
         return position
-        #else:
-            #return []
 
-    def getBesidePos(self,pos,typ):#Aquimodificamos
+    def getBesidePos(self,pos,typ):
         BesidePos = list()
-        print("entre ∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫")
-        print("getUpPos: {}".format(self.getUpPos(pos,typ)))
-        print("getDownPos: {}".format(self.getDownPos(pos,typ)))
-        print("getRightPos: {}".format(self.getRightPos(pos,typ)))
-        print("getLeftPos: {}".format(self.getLeftPos(pos,typ)))
-        #print(self.valMove(self.getUpPos(pos,typ),typ))
-        #print(self.valMove(self.getDownPos(pos,typ),typ))
-        #print(self.valMove(self.getLeftPos(pos,typ),typ))
-        #print(self.valMove(self.getRightPos(pos,typ),typ))
-        if (self.valMove(self.getUpPos(pos,typ),typ)): BesidePos.append(self.getUpPos(pos,typ))
-        else: BesidePos.append([])
-        if (self.valMove(self.getDownPos(pos,typ),typ)): BesidePos.append(self.getDownPos(pos,typ))
-        else: BesidePos.append([])
-        if (self.valMove(self.getLeftPos(pos,typ),typ)): BesidePos.append(self.getLeftPos(pos,typ))
-        else: BesidePos.append([])
-        if (self.valMove(self.getRightPos(pos,typ),typ)): BesidePos.append(self.getRightPos(pos,typ))
-        else: BesidePos.append([])
+        #print("getUpPos: {}".format(self.getUpPos(pos)))
+        #print("getDownPos: {}".format(self.getDownPos(pos)))
+        #print("getRightPos: {}".format(self.getRightPos(pos)))
+        #print("getLeftPos: {}".format(self.getLeftPos(pos)))
+
+        if (self.valMove(self.getUpPos(pos),typ)):
+            BesidePos.append(self.getUpPos(pos))
+        else:
+            BesidePos.append([])
+        if (self.valMove(self.getDownPos(pos),typ)):
+            BesidePos.append(self.getDownPos(pos))
+        else:
+            BesidePos.append([])
+        if (self.valMove(self.getLeftPos(pos),typ)):
+            BesidePos.append(self.getLeftPos(pos))
+        else:
+            BesidePos.append([])
+        if (self.valMove(self.getRightPos(pos),typ)):
+            BesidePos.append(self.getRightPos(pos))
+        else:
+            BesidePos.append([])
         print("BesidePos : {}".format(BesidePos))
         return BesidePos
 
-    def setBesideTerrain(self,pos,terrain):
-        self.setTerrain(pos[0],terrain[0])
-        self.setTerrain(pos[1],terrain[1])
-        self.setTerrain(pos[2],terrain[2])
-        self.setTerrain(pos[3],terrain[3])
+    def setBesideTerrain(self,pos,terrain):#posactualdelmono
+        self.setTerrain(self.getUpPos(pos),terrain[0])
+        self.setTerrain(self.getDownPos(pos),terrain[1])
+        self.setTerrain(self.getLeftPos(pos),terrain[2])
+        self.setTerrain(self.getRightPos(pos),terrain[3])
+        #print("Seteo UP: {}".format(self.getUpTerrain(pos)))
+        #print("Seteo DOWN: {}".format(self.getDownTerrain(pos)))
+        #print("Seteo LEFT: {}".format(self.getLeftTerrain(pos)))
+        #print("Seteo RIGHT: {}".format(self.getRightTerrain(pos)))
 
     def getBesideTerrain(self,pos):
         BesideTerrain = list()
@@ -110,24 +106,20 @@ class BeingMap(Map):
             return -2
 
     def valTerrain(self, pos, tipo):
-        #print("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
-        print("------------------Validando Terreno--------------------------------")
+        #print("------------------Validando Terreno--------------------------------")
         vals = self.beingInfo.get(tipo)
-        #print(vals)
-        print("pos en valTerrain: {}".format(pos))
+        #print("pos en valTerrain: {}".format(pos))
         terrain = int(self.matrix[pos[0]][pos[1]][0])
-        print(terrain)
+        #print(terrain)
         #print(str(vals[terrain])+"!= X:{}".format(vals[terrain] != 'X'))
-        #print("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
-        #print("Val Terrain : {}".format(vals[terrain] != 'X'))
         return (vals[terrain] != 'X')
 
-    def valVisited(self, pos): ####Funcionando no tocar
+    def valVisited(self, pos):
         #print("------------------Validando Visitado--------------------------------")
         #print("position:"+str(pos)+" No Visitado: {}".format(not(self.getVisited(pos) == 'v')))
         return not(self.getVisited(pos) == 'v')
 
-    def valDimesions(self, pos): ####Funcionando no tocar
+    def valDimesions(self, pos):
         #print("------------------Validando Dimensiones--------------------------------")
         #print(pos)
         #print("pos[x] < dimensions en x : {}".format((int(pos[0])<int(self.dimensions[0]))))
@@ -138,10 +130,9 @@ class BeingMap(Map):
 
     def valMove(self,pos,type):
         #print("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
-        print("Recibo la {} pos para validar: ".format(pos))
+        #print("Recibo la {} pos para validar: ".format(pos))
         #print("La pos {} esta dentro de la dimensions de la ventana: {}".format(pos,self.valDimesions(pos)))
         if(self.valDimesions(pos)):
-            #print("la posicion es valida")
             return (self.valTerrain(pos,type) and (self.valVisited(pos)))
         else:
             return False

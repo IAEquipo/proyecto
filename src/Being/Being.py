@@ -118,27 +118,25 @@ class Being(object):
         return BesideCost
 
     def move(self,beside): #window nos  manda beside
-        nodeToClose = list()
-        print("||||||||||||||||||<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>g>>>>>>>>>>>>>> <<<<|||||||||||||||")
+        #nodeToClose = list()
+        print("∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫Inicio Move∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫∫")
         self.view.setNow(self.__pos)
-        self.view.setBesideTerrain(self.view.getBesidePos(self.__pos,self.__type),beside)
-        self.openNode(self.view.getBesidePos(self.__pos,self.__type), self.getCostBeside(self.view.getBesidePos(self.__pos,self.__type)))
+        self.view.setBesideTerrain(self.__pos,beside)
+        nodes = self.view.getBesidePos(self.__pos,self.__type)
+        self.openNode(nodes, self.getCostBeside(nodes))
         self.closeNode(self.getNodeFormat(self.__pos,self.costT))
-        #print("El mejor nodo: {}".format(best))
         best = self.star.bestNode(self.__final)
-        print("Move recibi Best->"+str(best))
-        #print("nose que poner aqui->"+str(self.view.getBesideTerrain(self.__pos)))
+        print("El mejor nodo: {}".format(best))
         #print ("TerrainCost: {}".format(self.terrainCost(best)))
         self.setPos(best[:2],beside)
         #self.costT = self.costT + int(self.terrainCost(best[2]))
-        print("before--Mi Costo->"+str(self.costT))
+        #print("before--Mi Costo->"+str(self.costT))
         self.costT = best[2]
-        print("after--Mi Costo->"+str(self.costT))
+        #print("after--Mi Costo->"+str(self.costT))
         assignNode = (str(best[0]) + "," +str(best[1]))
-        print(assignNode)
+        #print(assignNode)
         self.__padre = Node(assignNode, parent = self.__padre)
         self.view.deleteNow(self.__pos)
-        print("|||||||||||||<<<<<<<<<<<<<<<<<<<<< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> <<<<<<<<<<<<<<<<<<<<<<||||||||||||||||||||")
 
     def finished(self):
         if (self.__pos == self.__final):
