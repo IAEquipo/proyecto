@@ -1,49 +1,50 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import random
-from threading import Thread
+from multiprocessing import Process
 from Window.Window import *
 
-tipo = ["Human","Octopus", "Monkey"]
+win = Window()
 
-def randomPoint(win, tipo):
-    dim = win.getDimensions()
+def randomPoint(tipo):
+    global win
     while True:
         start = list()
-        start.append(random.randrange(dim[0]))
-        start.append(random.randrange(dim[1]))
+        start.append(random.randrange(win.getDimensions()[0]))
+        start.append(random.randrange(win.getDimensions()[1]))
         #print (start)
         if win.valTerrain(start, tipo):
             break
-
     return start
 
-def run(inicio, fin):
+def run(inicio, final, name):
     win = Window()
-    global tipo
+    tipo = ["Human", "Monkey", "Octopus"]
+    players = list()
+    print("{}\tInicio: {}\tFinal: {}".format(name, inicio, final))
     for t in tipo:
-        players.append([t, inicio, fin])
-        print("Tipo: {}\tInicio: {}\tFinal: {}".format(t, posStart, posFinal))
+        players.append([t, inicio, final])
     win.setPlayers(players)
 
     win.loop()
 
 def main():
-    """
-    start = randomPoint(win, t)
-    darkTemple = randomPoint(win, t)
-    magicStones = randomPoint(win, t)
-    key = randomPoint(win, t)
-    portal = randomPoint(win, t)
+    files = list()
+    start = randomPoint("Human")
+    darkTemple = randomPoint("Human")
+    magicStones = randomPoint("Human")
+    key = randomPoint("Human")
+    portal = randomPoint("Human")
 
-    darkTempleT = Thread(target=run , args(start,darkTemple,))
-    darkTempleToPortalT = Thread(target=run , args(darkTemple,portal,))
+    darkTempleT = Process(target=run , args=(start,darkTemple,"darkTempleT",))
+    darkTempleToPortalT = Process(target=run , args=(darkTemple,portal,"darkTempleToPortalT",))
 
-    magicStonesT = Thread(target=run , args(start,magicStones,))
-    magicStonesToPortalT = Thread(target=run , args(magicStones,portal,))
 
-    keyT = Thread(target=run , args(start,key,))
-    keyToPortalT = Thread(target=run , args(key,portal,))
+    magicStonesT = Process(target=run , args=(start,magicStones,"magicStonesT",))
+    magicStonesToPortalT = Process(target=run , args=(magicStones,portal,"magicStonesToPortalT",))
+
+    keyT = Process(target=run , args=(start,key,"keyT",))
+    keyToPortalT = Process(target=run , args=(key,portal,"keyToPortalT",))
 
     darkTempleT.start()
     darkTempleToPortalT.start()
@@ -58,30 +59,21 @@ def main():
     magicStonesToPortalT.join()
     keyT.join()
     keyToPortalT.join()
-    """
-    global tipo
-    win = Window()
-    start = randomPoint(win, tipo[0])
-    darkTemple = randomPoint(win, tipo[0])
-    darkTempleT = Thread(target=run , args=(start,darkTemple,))
-    darkTempleT.start()
-    darkTempleT.join()
-    """
-    win = Window()
-    tipo = ["Human"]
-    players = list()
-    for t in tipo:
-        #posStart = randomPoint(win, t)
-        #posFinal = randomPoint(win, t)
-        posStart = [8,9]
-        posFinal = [10,9]
-        players.append([t, posStart, posFinal])
-        #print("Player: {}".format(players))
-        print("Tipo: {}\tInicio: {}\tFinal: {}".format(t, posStart, posFinal))
-    win.setPlayers(players)
 
-    win.loop()
-    """
+    files.append(str(start[0]) + str(start[1]) + "_" + str(darkTemple[0]) + str(darkTemple[1]) + ".txt")
+    files.append(str(darkTemple[0]) + str(darkTemple[1]) + "_" + str(portal[0]) + str(portal[1]) + ".txt")
+    files.append(str(start[0]) + str(start[1]) + "_" + str(magicStones[0]) + str(magicStones[1]) + ".txt")
+    files.append(str(magicStones[0]) + str(magicStones[1]) + "_" + str(portal[0]) + str(portal[1]) + ".txt")
+    files.append(str(start[0]) + str(start[1]) + "_" + str(key[0]) + str(key[1]) + ".txt")
+    files.append(str(key[0]) + str(key[1]) + "_" + str(portal[0]) + str(portal[1]) + ".txt")
+
+    aux = Archivo()
+    costos = list()
+    for file in files:
+        costos.append(aux.readOut(file)[0])
+
+    for costo in costos:
+        print(costo)
 
 if __name__ == '__main__':
     main()

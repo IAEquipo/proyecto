@@ -29,6 +29,16 @@ class Archivo:
         leer.close()
         return contenido[:-1]
 
+    def readOut(self, ruta):
+        with open(ruta, 'r') as leer:
+            contenido = leer.read().split('\n')
+        i = 0
+        leer.close()
+        for line in contenido:
+            contenido[i] = line.split(',')[:-1]
+            i = i + 1
+        return contenido
+
     def write(self, ruta, contenido):
         escribir = open(ruta , 'w')
         escribir.write(contenido)

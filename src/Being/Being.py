@@ -28,6 +28,9 @@ class Being(object):
         self.__padre = self.raiz
         self.star.setOpenNode(self.getNodeFormat(self.__pos,0))
         self.star.setPosFinal(self.__final)
+        self.filename = str(self.__pos[0]) + str(self.__pos[1]) + "_" + str(self.__final[0]) + str(self.__final[1]) + ".txt"
+        print(self.filename)
+        self.file = open(self.filename, "w")
 
     @property
     def getParent(self):
@@ -143,3 +146,6 @@ class Being(object):
             return self.costT
         else:
             return False
+
+    def getFile(self):
+        return self.filename
