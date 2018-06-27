@@ -1,26 +1,39 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import pygame, sys
+import pygame, sys, os
 
 from pygame.locals import *
 from Map.Map import *
 from Being.Being import *
 
-WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-GRAY = (127, 127, 127)
 ORANGE_L = (252, 190, 149)
 BLUE = (0, 177, 249)
 YELLOW = (255, 190, 65)
 GREEN = (146, 209, 101)
-DEFAULT = (243, 123, 173)
+PURPLE = (208, 147, 224)
+WHITE = (255, 255, 255)
+
+
+DEFAULT = (123, 244, 180)
 
 COLOR_FINAL = (255, 0, 186)
 COLOR_L = (244,110,120)
-COLOR_BEIGN = (255, 0, 0)
 COLOR_LABEL = (255,0,255)
 
+COLOR_HUMAN = (243, 123, 173)
+COLOR_MONKEY = (193, 51, 13)
+COLOR_OCTOPUS = (47, 11, 94)
+COLOR_CROC = (18, 97, 6)
+COLOR_SASQUATCH = (10, 22, 193)
+COLOR_WEREWOLF = (77, 76, 76)
+
 PIXEL = 30
+
+#Finished = [0,0,0]
+#costo = ""
+#ruta = ""
+
 
 class Window(object):
 
@@ -33,7 +46,6 @@ class Window(object):
         self.__beings = list()
         self.__reloj = pygame.time.Clock()
         pygame.display.set_caption('Artificial Intelligence')
-
 
     def loop(self):
         pygame.display.flip()
@@ -56,10 +68,15 @@ class Window(object):
                     being.move(self.__map.getBesideTerrain(being.getPos(), being.getType()))
                 else:
                     pass
+                    #costo = costo + str(being.getCost()) + ','
+                    #file.write(costo)
+                    #ruta = ruta + str (being.getRoute()) + ','
+                    #file.write(ruta)
 
+            #self.createFile()
             pygame.display.flip()
             self.paint()
-            self.__reloj.tick(2)
+            self.__reloj.tick(7)
 
     def paint(self):
         global PIXEL
@@ -68,22 +85,28 @@ class Window(object):
         for line in self.__map.getMatrix():
             for value in line:
                 if value == '0':
-                    global BLACK
+                    global BLACK#Montaña
                     pygame.draw.rect(self.__canvas, BLACK, (x, y, PIXEL, PIXEL), 0)
                 elif value == '1':
-                    global ORANGE_L
+                    global ORANGE_L#Tierra
                     pygame.draw.rect(self.__canvas, ORANGE_L, (x, y, PIXEL, PIXEL), 0)
                 elif value == '2':
-                    global BLUE
+                    global BLUE#Agua
                     pygame.draw.rect(self.__canvas, BLUE, (x, y, PIXEL, PIXEL), 0)
                 elif value == '3':
-                    global YELLOW
+                    global YELLOW#Arena
                     pygame.draw.rect(self.__canvas, YELLOW, (x, y, PIXEL, PIXEL), 0)
                 elif value == '4':
-                    global GREEN
+                    global GREEN#Bosque
+                    pygame.draw.rect(self.__canvas, GREEN, (x, y, PIXEL, PIXEL), 0)
+                elif value == '5':
+                    global PURPLE#Pantano
+                    pygame.draw.rect(self.__canvas, GREEN, (x, y, PIXEL, PIXEL), 0)
+                elif value == '6':
+                    global WHITE#Nieve
                     pygame.draw.rect(self.__canvas, GREEN, (x, y, PIXEL, PIXEL), 0)
                 elif value == -1:
-                    global GRAY
+                    global GRAY#Sombra
                     pygame.draw.rect(self.__canvas, GRAY, (x, y, PIXEL, PIXEL), 0)
                 else:
                     global DEFAULT
@@ -91,10 +114,32 @@ class Window(object):
                 y += PIXEL
             x += PIXEL
             y = 0
-        global COLOR_BEIGN, COLOR_FINAL
+        global COLOR_FINAL
         for being in self.__beings:
-            start = being.getPos()
-            pygame.draw.rect(self.__canvas, COLOR_BEIGN, (start[0]*PIXEL, start[1]*PIXEL, PIXEL, PIXEL), 0)
+            if being.getType() == "Human":
+                global COLOR_HUMAN
+                pos = being.getPos()
+                pygame.draw.rect(self.__canvas, COLOR_HUMAN, (pos[0]*PIXEL, pos[1]*PIXEL, PIXEL, PIXEL), 0)
+            elif being.getType() == "Monkey":
+                global COLOR_MONKEY
+                pos = being.getPos()
+                pygame.draw.rect(self.__canvas, COLOR_MONKEY, (pos[0]*PIXEL, pos[1]*PIXEL, PIXEL, PIXEL), 0)
+            elif being.getType() == "Octopus":
+                global COLOR_OCTOPUS
+                pos = being.getPos()
+                pygame.draw.rect(self.__canvas, COLOR_OCTOPUS, (pos[0]*PIXEL, pos[1]*PIXEL, PIXEL, PIXEL), 0)
+            elif being.getType() == "Croc":
+                global COLOR_CROC
+                pos = being.getPos()
+                pygame.draw.rect(self.__canvas, COLOR_CROC, (pos[0]*PIXEL, pos[1]*PIXEL, PIXEL, PIXEL), 0)
+            elif being.getType() == "Sasquatch":
+                global COLOR_SASQUATCH
+                pos = being.getPos()
+                pygame.draw.rect(self.__canvas, COLOR_SASQUATCH, (pos[0]*PIXEL, pos[1]*PIXEL, PIXEL, PIXEL), 0)
+            elif being.getType() == "Werewolf":
+                global COLOR_WEREWOLF
+                pos = being.getPos()
+                pygame.draw.rect(self.__canvas, COLOR_WEREWOLF, (pos[0]*PIXEL, pos[1]*PIXEL, PIXEL, PIXEL), 0)
             final = being.getFinal()
             pygame.draw.rect(self.__canvas, COLOR_FINAL, (final[0]*PIXEL, final[1]*PIXEL, PIXEL, PIXEL), 0)
 
@@ -114,6 +159,10 @@ class Window(object):
             label = font.render("Sand", 1, COLOR_L)
         elif num == '4':
             label = font.render("Forest", 1, COLOR_L)
+        elif num == '5':
+            label = font.render("Swamp", 1, COLOR_L)
+        elif num == '6':
+            label = font.render("Snow", 1, COLOR_L)
 
         self.__canvas.blit(label, (pos[0], pos[1]))
 
@@ -142,3 +191,6 @@ class Window(object):
         for player in players:
             aux = Being(player[0], player[1], player[2])
             self.__beings.append(aux)
+
+    def createFile(self):
+        file = open(self.filename, "w")

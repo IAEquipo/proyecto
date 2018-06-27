@@ -73,7 +73,7 @@ class BeingMap(Map):
             BesidePos.append(self.getRightPos(pos))
         else:
             BesidePos.append([])
-        print("BesidePos : {}".format(BesidePos))
+        #print("BesidePos : {}".format(BesidePos))
         return BesidePos
 
     def setBesideTerrain(self,pos,terrain):#posactualdelmono

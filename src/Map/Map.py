@@ -31,8 +31,8 @@ class Map(object):
         beside.append(self.getDownTerrain(pos))
         beside.append(self.getLeftTerrain(pos))
         beside.append(self.getRightTerrain(pos))
-        print("Estoy en la posicion {} y los valores de mis lados".format(pos))
-        print("Estoy desde getBesideTerrain: {}".format(beside))
+        #print("Estoy en la posicion {} y los valores de mis lados".format(pos))
+        #print("Estoy desde getBesideTerrain: {}".format(beside))
         return beside
 
     @property
